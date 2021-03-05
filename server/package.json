@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --inspect --clear --transpile-only --no-notify -r tsconfig-paths/register src",
+    "start": "node dist",
+    "lint": "eslint src --ext=.ts --fix",
+    "precommit": "lint-staged",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "typeorm": "ts-node-dev -r tsconfig-paths/register node_modules/.bin/typeorm"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.1.1"
+  }
+}

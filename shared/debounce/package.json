@@ -1,0 +1,23 @@
+{
+  "name": "@shared/debounce",
+  "private": true,
+  "main": "index.ts",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Harlan Cleiton",
+    "email": "harlancleiton@gmail.com",
+    "url": "https://github.com/harlancleiton"
+  },
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "dev": "echo >> /dev/null",
+    "lint": "eslint --ext=.ts --fix",
+    "test": "echo >> /dev/null",
+    "precommit": "lint-staged"
+  },
+  "dependencies": {
+    "rimraf": "^3.0.2"
+  }
+}
