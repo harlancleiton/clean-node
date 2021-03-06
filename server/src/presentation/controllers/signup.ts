@@ -5,7 +5,7 @@ import { HttpRequest, HttpResponse } from '../protocols';
 export class SignUpController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const requiredFields = ['email', 'name'];
+    const requiredFields = ['email', 'name', 'password'];
 
     for (const field of requiredFields) {
       if (!httpRequest.body[field])
