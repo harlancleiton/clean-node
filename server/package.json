@@ -9,8 +9,11 @@
     "start": "node dist",
     "lint": "eslint src --ext=.ts --fix",
     "precommit": "lint-staged",
-    "test": "jest",
-    "test:cov": "jest --coverage",
+    "test": "jest --silent",
+    "test:cov": "yarn run test --coverage",
+    "test:e2e": "yarn run test -c jest-e2e.config.js --runInBand",
+    "test:unit": "yarn run test -c jest-unit.config.js",
+    "test:verbose": "yarn run test --silent=false",
     "typeorm": "ts-node-dev -r tsconfig-paths/register node_modules/.bin/typeorm"
   },
   "dependencies": {
