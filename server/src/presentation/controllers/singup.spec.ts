@@ -2,8 +2,13 @@ import { MissingParamException } from '../exceptions';
 import { SignUpController } from './signup';
 
 describe('SignUpController', () => {
+  let sut: SignUpController;
+
+  beforeEach(() => {
+    sut = new SignUpController();
+  });
+
   it('should return 400 if no name is provided', async () => {
-    const sut = new SignUpController();
     const httpRequest = {
       body: {
         email: 'any_email@mail.com',
@@ -17,7 +22,6 @@ describe('SignUpController', () => {
   });
 
   it('should return 400 if no email is provided', async () => {
-    const sut = new SignUpController();
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -31,7 +35,6 @@ describe('SignUpController', () => {
   });
 
   it('should return 400 if no password is provided', async () => {
-    const sut = new SignUpController();
     const httpRequest = {
       body: {
         name: 'any_name',
@@ -45,7 +48,6 @@ describe('SignUpController', () => {
   });
 
   it('should return 400 if no password confirmation is provided', async () => {
-    const sut = new SignUpController();
     const httpRequest = {
       body: {
         name: 'any_name',
