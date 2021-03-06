@@ -31,4 +31,20 @@ describe('DbAddAccountUsecase', () => {
 
     expect(hasherStub.make).toBeCalledWith('valid_password');
   });
+
+  it('should throw if Hasher throws', async () => {
+    jest.spyOn(hasherStub, 'make').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const addAccountModel: AddAccountModel = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    };
+
+    await expect(sut.execute(addAccountModel)).rejects.toThrow();
+
+    expect(hasherStub.make).toBeCalledWith('valid_password');
+  });
 });
