@@ -1,11 +1,20 @@
-import { MissingParamException } from '../exceptions';
+import { InvalidParamException, MissingParamException } from '../exceptions';
+import { EmailValidator } from '../protocols';
 import { SignUpController } from './signup';
 
 describe('SignUpController', () => {
   let sut: SignUpController;
+  let emailValidatorStub: EmailValidator;
 
   beforeEach(() => {
-    sut = new SignUpController();
+    class EmailValidatorStub implements EmailValidator {
+      isValid(email: string): boolean {
+        return !!email;
+      }
+    }
+
+    emailValidatorStub = new EmailValidatorStub();
+    sut = new SignUpController(emailValidatorStub);
   });
 
   it('should return 400 if no name is provided', async () => {
@@ -16,7 +25,9 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     };
+
     const httpResponse = await sut.handle(httpRequest);
+
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamException('name'));
   });
@@ -29,7 +40,9 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     };
+
     const httpResponse = await sut.handle(httpRequest);
+
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamException('email'));
   });
@@ -42,7 +55,9 @@ describe('SignUpController', () => {
         passwordConfirmation: 'any_password'
       }
     };
+
     const httpResponse = await sut.handle(httpRequest);
+
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamException('password'));
   });
@@ -55,10 +70,30 @@ describe('SignUpController', () => {
         password: 'any_password'
       }
     };
+
     const httpResponse = await sut.handle(httpRequest);
+
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(
       new MissingParamException('passwordConfirmation')
     );
+  });
+
+  it('should return 400 if an invalid email is provided', async () => {
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    };
+
+    jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(400);
+    expect(httpResponse.body).toEqual(new InvalidParamException('email'));
   });
 });
