@@ -5,11 +5,12 @@ import { HttpRequest, HttpResponse } from '../protocols';
 export class SignUpController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    if (!httpRequest.body.name)
-      return badRequest(new MissingParamException('name'));
+    const requiredFields = ['email', 'name'];
 
-    if (!httpRequest.body.email)
-      return badRequest(new MissingParamException('email'));
+    for (const field of requiredFields) {
+      if (!httpRequest.body[field])
+        return badRequest(new MissingParamException(field));
+    }
 
     return { body: {}, statusCode: 200 };
   }
