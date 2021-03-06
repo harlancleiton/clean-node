@@ -1,3 +1,6 @@
+import { AccountModel } from '~/domain/models';
+import { AddAccount, AddAccountModel } from '~/domain/usecases';
+
 import {
   InvalidParamException,
   MissingParamException,
@@ -9,6 +12,7 @@ import { SignUpController } from './signup';
 describe('SignUpController', () => {
   let sut: SignUpController;
   let emailValidatorStub: EmailValidator;
+  let addAccountStub: AddAccount;
 
   beforeEach(() => {
     class EmailValidatorStub implements EmailValidator {
@@ -17,8 +21,20 @@ describe('SignUpController', () => {
       }
     }
 
+    class AddAccountStub implements AddAccount {
+      execute(account: AddAccountModel): Promise<AccountModel> {
+        const fakeAccount = {
+          ...account,
+          id: 'valid_id'
+        };
+
+        return Promise.resolve(fakeAccount);
+      }
+    }
+
     emailValidatorStub = new EmailValidatorStub();
-    sut = new SignUpController(emailValidatorStub);
+    addAccountStub = new AddAccountStub();
+    sut = new SignUpController(emailValidatorStub, addAccountStub);
   });
 
   it('should return 400 if no name is provided', async () => {
@@ -154,5 +170,26 @@ describe('SignUpController', () => {
 
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
+  });
+
+  it('should call AddAccount with correct values', async () => {
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    };
+
+    jest.spyOn(addAccountStub, 'execute');
+
+    await sut.handle(httpRequest);
+
+    expect(addAccountStub.execute).toBeCalledWith({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    });
   });
 });
