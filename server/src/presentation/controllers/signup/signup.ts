@@ -1,4 +1,4 @@
-import { badRequest, serverError } from '~/presentation/helpers';
+import { badRequest, created, serverError } from '~/presentation/helpers';
 
 import { InvalidParamException, MissingParamException } from '../../exceptions';
 import {
@@ -42,7 +42,7 @@ export class SignUpController implements Controller {
       const { name } = body;
       const account = await this.addAccount.execute({ name, email, password });
 
-      return { body: account, statusCode: 201 };
+      return created(account);
     } catch (error) {
       return serverError();
     }
