@@ -214,4 +214,23 @@ describe('SignUpController', () => {
     expect(httpResponse.statusCode).toBe(500);
     expect(httpResponse.body).toEqual(new ServerError());
   });
+
+  it('should return 201 if valid data is provided', async () => {
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    };
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(201);
+    expect(httpResponse.body).toMatchObject({
+      name: 'any_name',
+      email: 'any_email@mail.com'
+    });
+  });
 });
