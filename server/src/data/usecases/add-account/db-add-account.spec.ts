@@ -14,7 +14,7 @@ describe('DbAddAccountUsecase', () => {
   beforeEach(() => {
     class AddAccountRepositoryStub implements AddAccountRepository {
       async add(addAccountModel: AddAccountModel): Promise<AccountModel> {
-        return { ...addAccountModel, id: 'id' };
+        return { ...addAccountModel, id: 'valid_id' };
       }
     }
 
@@ -90,6 +90,30 @@ describe('DbAddAccountUsecase', () => {
 
     await expect(sut.execute(addAccountModel)).rejects.toThrow();
 
+    expect(addAccountRepositoryStub.add).toBeCalledWith({
+      name: 'valid_name',
+      email: 'valid_email',
+      password: await hasherStub.make('valid_password')
+    });
+  });
+
+  it('should return an account on success', async () => {
+    const addAccountModel: AddAccountModel = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    };
+
+    jest.spyOn(addAccountRepositoryStub, 'add');
+
+    const account = await sut.execute(addAccountModel);
+
+    expect(account).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email',
+      password: await hasherStub.make('valid_password')
+    });
     expect(addAccountRepositoryStub.add).toBeCalledWith({
       name: 'valid_name',
       email: 'valid_email',
