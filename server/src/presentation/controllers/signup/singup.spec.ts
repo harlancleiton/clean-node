@@ -1,13 +1,15 @@
-import { AccountModel } from '~/domain/models';
-import { AddAccount, AddAccountModel } from '~/domain/usecases';
-
 import {
   InvalidParamException,
   MissingParamException,
   ServerError
-} from '../exceptions';
-import { EmailValidator } from '../protocols';
+} from '../../exceptions';
 import { SignUpController } from './signup';
+import {
+  AccountModel,
+  AddAccount,
+  AddAccountModel,
+  EmailValidator
+} from './signup-protocols';
 
 describe('SignUpController', () => {
   let sut: SignUpController;
