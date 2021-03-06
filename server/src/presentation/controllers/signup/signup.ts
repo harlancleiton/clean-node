@@ -40,9 +40,9 @@ export class SignUpController implements Controller {
         return badRequest(new InvalidParamException('passwordConfirmation'));
 
       const { name } = body;
-      await this.addAccount.execute({ name, email, password });
+      const account = await this.addAccount.execute({ name, email, password });
 
-      return { body: {}, statusCode: 200 };
+      return { body: account, statusCode: 201 };
     } catch (error) {
       return serverError();
     }
