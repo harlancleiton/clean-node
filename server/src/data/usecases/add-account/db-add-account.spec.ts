@@ -1,7 +1,5 @@
-import { Hasher } from '~/data/protocols';
-import { AddAccountModel } from '~/domain/usecases';
-
 import { DbAddAccount } from './db-add-account';
+import { AddAccountModel, Hasher } from './db-add-account-protocols';
 
 describe('DbAddAccountUsecase', () => {
   let sut: DbAddAccount;
