@@ -164,8 +164,8 @@ describe('SignUpController', () => {
       }
     };
 
-    jest.spyOn(emailValidatorStub, 'isValid').mockImplementation(() => {
-      throw new ServerError();
+    jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new Error();
     });
 
     const httpResponse = await sut.handle(httpRequest);
@@ -193,5 +193,25 @@ describe('SignUpController', () => {
       email: 'any_email@mail.com',
       password: 'any_password'
     });
+  });
+
+  it('should return 500 if AddAccount throws', async () => {
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    };
+
+    jest.spyOn(addAccountStub, 'execute').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpResponse = await sut.handle(httpRequest);
+
+    expect(httpResponse.statusCode).toBe(500);
+    expect(httpResponse.body).toEqual(new ServerError());
   });
 });
