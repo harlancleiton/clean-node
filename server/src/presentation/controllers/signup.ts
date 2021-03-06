@@ -1,8 +1,8 @@
 import { MissingParamException } from '../exceptions';
 import { badRequest } from '../helpers';
-import { HttpRequest, HttpResponse } from '../protocols';
+import { Controller, HttpRequest, HttpResponse } from '../protocols';
 
-export class SignUpController {
+export class SignUpController implements Controller {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const requiredFields = [
