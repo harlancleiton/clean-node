@@ -3,12 +3,12 @@ import {
   AddAccount,
   AddAccountModel,
   AddAccountRepository,
-  Hasher
+  Hash
 } from './db-add-account-protocols';
 
 export class DbAddAccount implements AddAccount {
   constructor(
-    private readonly hasher: Hasher,
+    private readonly hash: Hash,
     private readonly addAccountRepository: AddAccountRepository
   ) {}
 
@@ -17,7 +17,7 @@ export class DbAddAccount implements AddAccount {
     name,
     password
   }: AddAccountModel): Promise<AccountModel> {
-    const hashedPassword = await this.hasher.make(password);
+    const hashedPassword = await this.hash.make(password);
 
     const account = await this.addAccountRepository.add({
       email,

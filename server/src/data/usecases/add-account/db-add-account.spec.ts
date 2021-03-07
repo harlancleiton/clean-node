@@ -3,13 +3,13 @@ import {
   AccountModel,
   AddAccountModel,
   AddAccountRepository,
-  Hasher
+  Hash
 } from './db-add-account-protocols';
 
 describe('DbAddAccountUsecase', () => {
   let sut: DbAddAccount;
   let addAccountRepositoryStub: AddAccountRepository;
-  let hasherStub: Hasher;
+  let hashStub: Hash;
 
   beforeEach(() => {
     class AddAccountRepositoryStub implements AddAccountRepository {
@@ -18,19 +18,19 @@ describe('DbAddAccountUsecase', () => {
       }
     }
 
-    class HasherStub implements Hasher {
+    class HashStub implements Hash {
       async make(payload: string): Promise<string> {
         return `hashed_password:${payload}`;
       }
     }
 
-    hasherStub = new HasherStub();
+    hashStub = new HashStub();
     addAccountRepositoryStub = new AddAccountRepositoryStub();
-    sut = new DbAddAccount(hasherStub, addAccountRepositoryStub);
+    sut = new DbAddAccount(hashStub, addAccountRepositoryStub);
   });
 
-  it('should call Hasher with correct password', async () => {
-    jest.spyOn(hasherStub, 'make');
+  it('should call Hash with correct password', async () => {
+    jest.spyOn(hashStub, 'make');
 
     const addAccountModel: AddAccountModel = {
       name: 'valid_name',
@@ -40,11 +40,11 @@ describe('DbAddAccountUsecase', () => {
 
     await sut.execute(addAccountModel);
 
-    expect(hasherStub.make).toBeCalledWith('valid_password');
+    expect(hashStub.make).toBeCalledWith('valid_password');
   });
 
-  it('should throw if Hasher throws', async () => {
-    jest.spyOn(hasherStub, 'make').mockImplementationOnce(() => {
+  it('should throw if Hash throws', async () => {
+    jest.spyOn(hashStub, 'make').mockImplementationOnce(() => {
       throw new Error();
     });
 
@@ -56,7 +56,7 @@ describe('DbAddAccountUsecase', () => {
 
     await expect(sut.execute(addAccountModel)).rejects.toThrow();
 
-    expect(hasherStub.make).toBeCalledWith('valid_password');
+    expect(hashStub.make).toBeCalledWith('valid_password');
   });
 
   it('should call AddAccountRepository with correct values', async () => {
@@ -73,11 +73,11 @@ describe('DbAddAccountUsecase', () => {
     expect(addAccountRepositoryStub.add).toBeCalledWith({
       name: 'valid_name',
       email: 'valid_email',
-      password: await hasherStub.make('valid_password')
+      password: await hashStub.make('valid_password')
     });
   });
 
-  it('should throw if Hasher throws', async () => {
+  it('should throw if AddAccountRepository throws', async () => {
     jest.spyOn(addAccountRepositoryStub, 'add').mockImplementationOnce(() => {
       throw new Error();
     });
@@ -93,7 +93,7 @@ describe('DbAddAccountUsecase', () => {
     expect(addAccountRepositoryStub.add).toBeCalledWith({
       name: 'valid_name',
       email: 'valid_email',
-      password: await hasherStub.make('valid_password')
+      password: await hashStub.make('valid_password')
     });
   });
 
@@ -112,12 +112,12 @@ describe('DbAddAccountUsecase', () => {
       id: 'valid_id',
       name: 'valid_name',
       email: 'valid_email',
-      password: await hasherStub.make('valid_password')
+      password: await hashStub.make('valid_password')
     });
     expect(addAccountRepositoryStub.add).toBeCalledWith({
       name: 'valid_name',
       email: 'valid_email',
-      password: await hasherStub.make('valid_password')
+      password: await hashStub.make('valid_password')
     });
   });
 });

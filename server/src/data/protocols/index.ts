@@ -1,2 +1,2 @@
-export * from './hasher';
+export * from './hash';
 export * from './add-account-repository';

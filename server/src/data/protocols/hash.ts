@@ -1,3 +1,3 @@
-export interface Hasher {
+export interface Hash {
   make(payload: string): Promise<string>;
 }
