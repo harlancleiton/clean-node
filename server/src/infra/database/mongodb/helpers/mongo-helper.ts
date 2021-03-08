@@ -21,4 +21,10 @@ export class MongoHelper {
   ): Collection<TSchema> {
     return this.client.db().collection(collection);
   }
+
+  static map<T = any>(collection: any): T {
+    const { _id, ...collectionWithoutId } = collection;
+
+    return { ...collectionWithoutId, id: _id };
+  }
 }
