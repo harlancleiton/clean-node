@@ -20,11 +20,19 @@ describe('BCryptAdpter', () => {
   it('should return a hash on success', async () => {
     jest
       .spyOn(bcrypt, 'hash')
-      .mockImplementation(async () => 'hashed_any_value');
+      .mockImplementationOnce(async () => 'hashed_any_value');
 
     const hash = await sut.make('any_value');
 
     expect(hash).toBeDefined();
     expect(hash).toBe('hashed_any_value');
+  });
+
+  it('should throw if bcrypt throws', async () => {
+    jest.spyOn(bcrypt, 'hash').mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    await expect(sut.make('any_value')).rejects.toThrow();
   });
 });
