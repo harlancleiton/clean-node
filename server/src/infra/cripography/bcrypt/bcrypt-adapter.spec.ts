@@ -16,4 +16,15 @@ describe('BCryptAdpter', () => {
 
     expect(bcrypt.hash).toBeCalledWith('any_value', expect.any(String));
   });
+
+  it('should return a hash on success', async () => {
+    jest
+      .spyOn(bcrypt, 'hash')
+      .mockImplementation(async () => 'hashed_any_value');
+
+    const hash = await sut.make('any_value');
+
+    expect(hash).toBeDefined();
+    expect(hash).toBe('hashed_any_value');
+  });
 });
